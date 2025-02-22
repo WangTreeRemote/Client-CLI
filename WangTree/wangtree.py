@@ -1,13 +1,41 @@
-version = "1.0.9"
+version = "1.1.0"
 it_version = 10003
 testmode = False
-print("正在载入需要库...",end='\r')
+print("loading...",end='\r')
 import socket
 import sys
+import locale
 import time
 import os
 import random
 import shutil
+try:
+    import lang
+    default_locale = locale.getdefaultlocale()
+    try:
+        exec(f"ulp = lang.{default_locale[0].lower()}")
+    except:
+        ulp = lang.en_us
+        print(f"WT language file is missing '{default_locale[0].lower()}', so this time it will start in 'en_us'")
+    #if default_locale[0].lower() == "en_us":
+    #    ulp = lang.en_us
+    #else:
+    #    ulp = lang.zh_cn
+except:
+    print('''
+A fatal error has occurred:
+Unable to load "lang.py"
+
+Please give feedback on Github issues:
+https://github.com/Squirrel963/WangTree/issues
+
+Info:
+''')
+    WTCv = globals()
+    for Ckey in list(WTCv.items()):
+        print(f"{Ckey}")
+    www = input("Press enter to exit...")
+    sys.exit(1)
 from colorama import Fore, Style
 try:
     from Crypto.Cipher import AES
@@ -40,34 +68,7 @@ randkey = str(random.randint(1000000000000000,9999999999999999))
 
 server_command = ["cmd","login","key","volue","lock"]
 
-helps = {
-    "help":"获取关于命令的帮助提示，用法：help <command>，使用'help all'来获取所有可用命令",
-    "cmd":"使WT受控终端运行cmd命令，用法：cmd <command>",
-    "key":"使WT受控终端模拟键盘输入字符，用法：key <text>",
-    "ser":"连接WT服务器，用法：ser <ip> <port>",
-    "lock":"使WT受控终端锁定所在计算机",
-    "volue":"使WT受控终端调整目标计算机音量",
-    "uplog":"获取来自PWD数据库的更新日志，用法：uplog <version>",
-    "testmode":"开关调试模式，用法：testmode <on/off>",
-    #"aes":"开关aes加密通信，用法：testmode <on/off>",
-    "printall":"打印WT终端的全部内存数据",
-    "info":"无",
-    "index":"打印欢迎屏幕",
-    "outlog":"与所连接的WT服务器断开连接，使用'outlog c'来强制断连",
-    "exit":"退出WT终端",
-    "ref":"使socket进行一次数据接收，使用'ref auto'来进行大内存信息接收",
-    "clear":"清空终端屏幕，使用'clear index'使终端屏幕清空后打印欢迎屏幕",
-    "set":"设置子设备，用法：set <ip>，使用'set fm'来进入文件检索模式",
-    "rekey":"刷新AES随机密钥",
-    "login":"验证并通过目标服务器的安全保护，用法：login <password>",
-    "":"",
-    "":"",
-    "":"",
-    "":"",
-    "":"",
-    "":"",
-    "":""
-}
+helps = ulp.helps
 
 till = [
 "__        __                      _____",
@@ -79,9 +80,9 @@ till = [
 ]
 
 def apple(text):
-    appl = input(Fore.RED + f"[ 警告 ] {text} [y/n] ")
+    appl = input(Fore.RED + f"[ {ulp.level_warn} ] {text} [y/n] ")
     print(Style.RESET_ALL, end="")
-    if appl == "y":
+    if appl.lower() == "y":
         return True
     else:
         return False
@@ -126,23 +127,24 @@ def index():
     for t in till:
         print(t)
     print(Style.RESET_ALL,end='\r')
-    print(f"王果树终端 v{version}")
-    print(f"当前设备IP(socket)：{ip}")
-    print(f"通信版本：{it_version}")
-    print(f"终端窗口大小(字符)：{get_window_size()}")
-    print(f"AES随机密钥：{randkey}")
-    print(f"调试模式：{testmode}")
-    print(f"拓展工具包：{Isinstall_toolback}")
+    print(f"{ulp.system_title} v{version}")
+    print(f"{ulp.system_ip}{ip}")
+    print(f"{ulp.system_it}{it_version}")
+    print(f"{ulp.system_size}{get_window_size()}")
+    print(f"{ulp.system_lang}{default_locale[0]}")
+    print(f"{ulp.system_aes}{randkey}")
+    print(f"{ulp.system_test}{testmode}")
+    print(f"{ulp.system_pack}{Isinstall_toolback}")
     print("-----------------------")
 
 def connect_server(server_ip):
     global login_name,logined
     server = server_ip.split(" ")
     if logined:
-        print(Fore.YELLOW + "[ 注意 ] 你已连接到一个服务器，请使用'outlog'断开之前的连接")
+        print(Fore.YELLOW + f"[ {ulp.level_error} ] {ulp.warn_logined}")
     else:
         try:
-            print("解析命令中...")
+            #print("解析命令中...")
             s_ip = server[0]
             #print(s_ip)
             if len(server) >= 2:
@@ -150,23 +152,23 @@ def connect_server(server_ip):
             else:
                 s_port = 200
             #print(s_port)
-            print("尝试连接服务器中...")
+            print(f"{ulp.system_try}...")
             socket_client.connect((s_ip, s_port))
             login_name = s_ip
             logined = True
-            print(f"连接成功，连接为{login_name}")
+            print(f"{ulp.system_suc}{login_name}")
             socket_client.send("dataget".encode("UTF-8"))
             try:
                 sit_version = int(socket_client.recv(2048).decode("UTF-8"))
             except:
                 sit_version = "Unknow"
-                print(Fore.RED + "[ 警告 ] 获取目标服务器通信版本失败，请尝试更新版本")
-            print(f"目标服务器通信版本：{sit_version}")
+                print(Fore.RED + f"[ {ulp.level_warn} ] {ulp.warn_low}")
+            print(f"{ulp.system_sit}{sit_version}")
             if not sit_version == it_version:
-                print(Fore.YELLOW + "[ 注意 ] 目标服务器的通信版本与终端不符，可能出现兼容问题")
+                print(Fore.YELLOW + f"[ {ulp.level_note} ] {ulp.warn_unmatch}")
             socket_client.setblocking(0)
         except:
-            print(Fore.RED + "[ 错误 ] 服务器连接失败")
+            print(Fore.RED + f"[ {ulp.level_error} ] {ulp.confail}")
 
 #提示等级：
 #错误_红色：用户操作造成的中断
@@ -174,9 +176,9 @@ def connect_server(server_ip):
 #注意_黄色：仅警告无中断
 
 def run_commands(head:str,volue:str):
-    global rebacked,socket_client,login_name,logined,testmode,sets,randkey,ref_auto
+    global rebacked,socket_client,login_name,logined,testmode,sets,randkey,ref_auto,ulp,helps
     rebacked = False
-    print(f"-运行{command} :")
+    print(f"-{ulp.info_run} {command} :")
     com_msg = head + ";" + volue
     if testmode:
         print(volue)
@@ -193,21 +195,21 @@ def run_commands(head:str,volue:str):
             connect_server(volue)
         elif head == "outlog":
             if volue == "c":
-                if apple("命令'outlog'后添加了参数'c'，这会使终端强制与服务器断开连接(无断连请求数据包)！你确定吗？"):
+                if apple(f"{ulp.warn_outlogc}"):
                     restart()
             else:
-                print("尝试断开连接中...(添加参数'c'来强制断连) ")
+                print(f"{ulp.info_try}")
                 socket_client.send("outlog".encode("UTF-8"))
                 login_name = Nolog
                 logined = False
                 socket_client.setblocking(1)
         elif head == "printall":
             WTCv = globals()
-            try:
-                WTCv.pop("till")
-                WTCv.pop("helps")
-            except:
-                pass
+            #try:
+            #    WTCv.pop("till")
+            #    WTCv.pop("helps")
+            #except:
+            #    pass
             print("=====  All Data  ================================================")
             for Ckey in list(WTCv.items()):
                 print(f"{Ckey}")
@@ -227,7 +229,7 @@ def run_commands(head:str,volue:str):
                     for help_co in temp_help:
                         print(help_co)
             except:
-                print(f"未找到关于命令'{volue}'的帮助提示")
+                print(f"{ulp.warn_help1}'{volue}'{ulp.warn_help2}")
         elif head == "uplog":
             uplog = UPDATECHECK.getlog("https://squirrel963.github.io/parrot_web_database/WTC_allinfo/index.md")
             if volue == "none":
@@ -242,7 +244,7 @@ def run_commands(head:str,volue:str):
                     for i in temp_uplog:
                         print(i)
                 except:
-                    print(Fore.RED + f"[ 错误 ] 未找到版本'{volue}'的更新日志")
+                    print(Fore.RED + f"[ {ulp.level_error} ] {ulp.warn_uplog1}'{volue}'{ulp.warn_uplog2}")
         elif head == "info":
             print(f"Python：{sys.version}")
             print("开源许可证：GPL-2.0")
@@ -255,7 +257,7 @@ def run_commands(head:str,volue:str):
             elif volue == "off":
                 testmode = False
             else:
-                print(f"调试模式：{testmode}")
+                print(f"{ulp.system_test}{testmode}")
         elif head == "ref":
             rebacked = True
             if volue == "auto":
@@ -271,29 +273,35 @@ def run_commands(head:str,volue:str):
                 elif volue == "fm":
                         sets = fm
                         print("===== File_Manager =====")
-                        print("您已进入文件检索模式")
-                        print("使用'out'来退出")
+                        print(f"{ulp.info_fm}")
+                        print(f"{ulp.info_out}")
                 else:
-                    print(Fore.RED + "[ 错误 ] 无效的ipv4地址")
+                    print(Fore.RED + f"[ {ulp.level_error} ] {ulp.warn_ipv4}")
             else:
-                print(Fore.RED + "[ 错误 ] 你没有连接到任何服务器")
+                print(Fore.RED + f"[ {ulp.level_error} ] {ulp.warn_nocon}")
         elif head == "clear":
             os.system("cls")
             if volue == "index":
                 index()
         elif head == "rekey":
-            if apple("刷新AES随机密钥可能会导致严重问题，你确定吗？"):
+            if apple(f"{ulp.warn_rekey}"):
                 randkey = str(random.randint(1000000000000000,9999999999999999))
-                print(f"AES随机密钥已更换为：{randkey}")
+                print(f"{ulp.warn_key}{randkey}")
+        elif head == "lang":
+            try:
+                exec(f"ulp = lang.{volue.lower()}")
+                exec("helps = ulp.helps")
+            except:
+                print("Failed to switch language")
         elif head in server_command:
             if logined:
                 try:
                     socket_client.send(com_msg.encode("UTF-8"))
                     rebacked = True
                 except:
-                    print(Fore.RED + "[ 警告 ] 远程命令发送失败，请检查设备可用性")
+                    print(Fore.RED + f"[ {ulp.level_warn} ] {ulp.warn_fail}")
             else:
-                print(Fore.RED + "[ 错误 ] 你没有连接到任何服务器")
+                print(Fore.RED + f"[ {ulp.level_error} ] {ulp.warn_nocon}")
         else:
             pass
 
@@ -301,10 +309,10 @@ index()
 
 try:
     import UPDATECHECK
-    if not testmode:
-        UPDATECHECK.check(version,'https://squirrel963.github.io/parrot_web_database/WTC_clientversion/index.md')
+    #if not testmode:
+    #    UPDATECHECK.check(version,'https://squirrel963.github.io/parrot_web_database/WTC_clientversion/index.md')
 except:
-    print(Fore.YELLOW + "[ 注意 ] UPDATECHECK模块未安装！")
+    print(Fore.YELLOW + f"[ {ulp.level_note} ] UPDATECHECK模块未安装！")
 while True:
     if sets == Nosets:
         command = input(f"{login_name} >>")
@@ -342,7 +350,7 @@ while True:
             waitedtime = 0
             if rebacked:
                 while rebackunsuss:
-                    print(f"等待服务器返回信息中...{10-waitedtime}      ",end='\r')
+                    print(f"{ulp.info_wait}...{10-waitedtime}      ",end='\r')
                     try:
                         reback = socket_client.recv(max_bytes).decode("UTF-8")
                         rebackunsuss = False
@@ -350,11 +358,11 @@ while True:
                         time.sleep(1)
                         waitedtime += 1
                         if waitedtime >= 10:
-                            print("[ 警告 ] 服务器返回信息超时，您可以使用'ref'来手动接收信息                      ")
+                            print(f"[ {ulp.level_warn} ] {ulp.info_timeout}                      ")
                             break
             if not rebackunsuss:
                     hunderd = round((sys.getsizeof(reback)/max_bytes)*100)
-                    print(f"服务器返回信息( {min(sys.getsizeof(reback), max_bytes)} bytes / {max_bytes} bytes [{min(hunderd, 100)}%] ):                     ")
+                    print(f"{ulp.info_back}( {min(sys.getsizeof(reback), max_bytes)} bytes / {max_bytes} bytes [{min(hunderd, 100)}%] ):                     ")
                     if not sets == fm:
                         print(reback)
                         if ref_auto:
@@ -373,5 +381,5 @@ while True:
                         else:
                             print(reback)
         except:
-            print(Fore.RED + "[ 警告 ] 发生未知错误")
+            print(Fore.RED + f"[ {ulp.level_warn} ] {ulp.warn_error}")
     print(Style.RESET_ALL)
