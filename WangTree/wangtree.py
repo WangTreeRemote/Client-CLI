@@ -1,5 +1,5 @@
-version = "1.1.0"
-it_version = 10003
+version = "1.1.1"
+it_version = 10004
 testmode = False
 print("loading...",end='\r')
 import socket
@@ -7,6 +7,7 @@ import sys
 import locale
 import time
 import os
+import json
 import random
 import shutil
 try:
@@ -138,7 +139,7 @@ def index():
     print("-----------------------")
 
 def connect_server(server_ip):
-    global login_name,logined
+    global login_name,logined,server_command
     server = server_ip.split(" ")
     if logined:
         print(Fore.YELLOW + f"[ {ulp.level_error} ] {ulp.warn_logined}")
@@ -159,9 +160,27 @@ def connect_server(server_ip):
             print(f"{ulp.system_suc}{login_name}")
             socket_client.send("dataget".encode("UTF-8"))
             try:
-                sit_version = int(socket_client.recv(2048).decode("UTF-8"))
-            except:
-                sit_version = "Unknow"
+                sit_info = json.loads(socket_client.recv(2048).decode("UTF-8"))
+                sit_version = sit_info["it"]
+                print(f"+-{ulp.info_it}")
+                nomuch = False
+                for i in server_command:
+                    if not i in sit_info["wl"]:
+                        print(Fore.RED + f"    {ulp.warn_server}'{i}'")
+                        print(Style.RESET_ALL, end="")
+                        nomuch = True
+                for i in sit_info["wl"]:
+                    if not i in server_command:
+                        print(Fore.YELLOW + f"    {ulp.warn_terminal}'{i}'")
+                        print(Style.RESET_ALL, end="")
+                        server_command.append(i)
+                if not nomuch:
+                    print(Fore.GREEN + f"    -{ulp.info_match}")
+                    print(Style.RESET_ALL, end="")
+            except: #Exception as e:
+                #print(e)
+                sit_info = {"it":"Unknow","ver":"Unknow","wl":server_command}
+                sit_version = sit_info["it"]
                 print(Fore.RED + f"[ {ulp.level_warn} ] {ulp.warn_low}")
             print(f"{ulp.system_sit}{sit_version}")
             if not sit_version == it_version:
@@ -274,7 +293,7 @@ def run_commands(head:str,volue:str):
                         sets = fm
                         print("===== File_Manager =====")
                         print(f"{ulp.info_fm}")
-                        print(f"{ulp.info_out}")
+                        print(f"{ulp.info_fmout}")
                 else:
                     print(Fore.RED + f"[ {ulp.level_error} ] {ulp.warn_ipv4}")
             else:

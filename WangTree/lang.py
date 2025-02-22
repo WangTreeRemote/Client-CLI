@@ -28,6 +28,8 @@ class zh_cn:
     warn_fail = "远程命令发送失败，请检查设备可用性"
     warn_error = "发生未知错误"
     warn_outlogc = "命令'outlog'后添加了参数'c'，这会使终端强制与服务器断开连接(无断连请求数据包)！你确定吗？"
+    warn_server = "服务器缺失命令"
+    warn_terminal = "终端缺失命令"
     info_run = "运行"
     info_fm = "您已进入文件检索模式"
     info_fmout = "使用'out'来退出"
@@ -35,6 +37,8 @@ class zh_cn:
     info_timeout = "服务器返回信息超时，您可以使用'ref'来手动接收信息"
     info_back = "服务器返回信息"
     info_try = "尝试断开连接中...(添加参数'c'来强制断连) "
+    info_it = "兼容性检查："
+    info_match = "完全兼容"
     helps = {
     "help":"获取关于命令的帮助提示，用法：help <command>，使用'help all'来获取所有可用命令",
     "cmd":"使WT受控终端运行cmd命令，用法：cmd <command>",
@@ -94,6 +98,8 @@ class en_us(zh_cn):
     warn_fail = "Failed to send remote command, please check device availability"
     warn_error = "An unknown error has occurred"
     warn_outlogc = "The command 'log' is followed by the parameter 'c' , which forces the terminal to disconnect from the server (no disconnect request packets) ! Are you sure?"
+    warn_server = "Server is missing the command"
+    warn_terminal = "Terminal is missing the command"
     info_run = "Run"
     info_fm = "You are in document retrieval mode"
     info_fmout = "Use 'out' to exit"
@@ -101,6 +107,8 @@ class en_us(zh_cn):
     info_timeout = "The server timed out returning information, you can use 'ref' to manually receive the information"
     info_back = "Server return infomation"
     info_try = "Trying to disconnect... (add the parameter' C' to force disconnection) "
+    info_it = "Compatibility check: "
+    info_match = "Fully compatible"
     helps = {
     "help": "Get help hints about commands，Usage: help <command>，Use 'help all' to get all available commands",
     "cmd": "Run cmd commands on the WT-controlled terminal，Usage: cmd <command>",
@@ -160,6 +168,8 @@ class ru_ru(zh_cn):
     warn_fail = "Не удалось отправить удаленную команду. Проверьте доступность устройства"
     warn_error = "Произошла неизвестная ошибка"
     warn_outlogc = "Команда 'log' содержит параметр 'c', который принудительно отключает терминал от сервера (без пакетов запроса отключения)! Вы уверены?"
+    warn_server = "Сервер не отвечает на команду"
+    warn_terminal = "Терминал не отвечает на команду"
     info_run = "Запуск"
     info_fm = "Вы находитесь в режиме поиска документов"
     info_fmout = "Используйте 'out', чтобы выйти"
@@ -167,6 +177,8 @@ class ru_ru(zh_cn):
     info_timeout = "Сервер не ответил вовремя. Используйте 'ref', чтобы вручную получить информацию"
     info_back = "Сервер вернул информацию"
     info_try = "Попытка отключения... (добавьте параметр 'C', чтобы принудительно отключиться)"
+    info_it = "Проверка совместимости:"
+    info_match = "Полностью совместимо"
     helps = {
         "help": "Получить подсказки о командах，Использование: help <команда>，Используйте 'help all', чтобы получить все доступные команды",
         "cmd": "Выполнить команды cmd в терминале WT，Использование: cmd <команда>",
@@ -226,6 +238,8 @@ class zh_hk(zh_cn):
     warn_fail = "遠端命令發送失敗，請檢查設備可用性"
     warn_error = "發生未知錯誤"
     warn_outlogc = "命令 'outlog' 後添加了參數 'c'，這會使終端機強制與伺服器斷開連接（無斷連請求數據包）！您確定嗎？"
+    warn_server = "伺服器缺失命令"
+    warn_terminal = "終端機缺失命令"
     info_run = "運行"
     info_fm = "您已進入文件檢索模式"
     info_fmout = "使用 'out' 來退出"
@@ -233,6 +247,8 @@ class zh_hk(zh_cn):
     info_timeout = "伺服器返回信息超時，您可以使用 'ref' 來手動接收信息"
     info_back = "伺服器返回信息"
     info_try = "嘗試斷開連接中...(添加參數 'c' 來強制斷連)"
+    info_it = "兼容性檢查："
+    info_match = "完全兼容"
     helps = {
         "help": "獲取關於命令的幫助提示，用法：help <command>，使用 'help all' 來獲取所有可用命令",
         "cmd": "使 WT 受控終端機運行 cmd 命令，用法：cmd <command>",
