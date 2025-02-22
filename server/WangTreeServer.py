@@ -4,10 +4,13 @@ import threading
 import ctypes
 import win32api
 import win32con
+import json
 import keyboard
  
-version = "1.2.14"
-it_version = 10003
+version = "1.2.19"
+it_version = 10004
+
+white_list = ["login", "lock", "cmd", "key", "volue"]
 
 ip = socket.gethostbyname(socket.gethostname())
 
@@ -37,17 +40,25 @@ def handle_client(conn, address):
             if data_from_client == 'outlog':
                 break
             elif data_from_client == "dataget":
-                msg = str(it_version)
+                info = {
+                    "it":it_version,
+                    "ver":version,
+                    "wl":white_list
+                    }
+                msg = json.dumps(info)
             elif data[0] == "login":
-                if trys < 5:
-                    if data[1] == "1145":
-                        logined = True
-                        msg = "登录成功！"
+                if not logined:
+                    if trys < 5:
+                        if data[1] == "1145":
+                            logined = True
+                            msg = "登录成功！"
+                        else:
+                            trys += 1
+                            msg = f"错误的密钥，您本次连接还有{5-trys}次尝试机会"
                     else:
-                        trys += 1
-                        msg = f"错误的密钥，您本次连接还有{5-trys}次尝试机会"
+                        msg = "本次连接的安全验证已禁用，请重新连接"
                 else:
-                    msg = "本次连接的安全验证已禁用，请重新连接"
+                    msg = "您已登录"
             else:
                 if logined:
                     if data[0] == "cmd":
