@@ -6,13 +6,36 @@ import win32api
 import win32con
 import json
 import keyboard
+import time
+import tomli
  
-version = "1.2.19"
+version = "1.2.20"
 it_version = 10004
 
-white_list = ["login", "lock", "cmd", "key", "volue"]
+try:
+    with open("config.toml", mode="rb") as fp:
+        config = tomli.load(fp)  
+    #print(config)
+except:
+    print("[WARN]：Can't load config file ! Will use normal config !")
+    config = {'server': {'port': 200}, 
+              'command': {'white_list': ['login', 'lock', 'cmd', 'key', 'volue']}, 
+              'authentication': {'passkey': 'H114514', 'max_try': 5}}
+
+white_list = config['command']['white_list']
+passkey = config['authentication']['passkey']
+max_try = config['authentication']['max_try']
+inf_try = False
+if max_try == 0:
+    max_try = 10000
+    inf_try = True
+
 
 ip = socket.gethostbyname(socket.gethostname())
+
+def defix(text : str):
+    cstr = f"[{text.upper()}][{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}] "
+    return cstr
 
 def set_volume(volume):
     win32api.SendMessage(
@@ -22,10 +45,10 @@ def create_server_socket(host, port):
     socket_server = socket.socket()
     socket_server.bind((host, port))
     socket_server.listen(5)
-    print(f"服务端已启动  地址{host}，端口{port}")
+    print(f"{defix('server')}Successful start!  address : {host} port : {port}")
     while True:
         conn, address = socket_server.accept()
-        print(f"服务端接受到{address}的连接请求")
+        print(f"{defix('network')}{address} connected!")
         client_handler = threading.Thread(target=handle_client, args=(conn, address))
         client_handler.start()
  
@@ -34,7 +57,7 @@ def handle_client(conn, address):
     trys = 0
     while True:
         data_from_client: str = conn.recv(4096).decode("UTF-8")
-        print(f"{address}发送数据：{data_from_client}")
+        print(f"{defix('info')}{address}：{data_from_client}")
         data = data_from_client.split(";")
         try:
             if data_from_client == 'outlog':
@@ -48,17 +71,21 @@ def handle_client(conn, address):
                 msg = json.dumps(info)
             elif data[0] == "login":
                 if not logined:
-                    if trys < 5:
-                        if data[1] == "1145":
+                    if trys < max_try:
+                        if data[1] == passkey:
                             logined = True
                             msg = "登录成功！"
+                        elif data[1] == "none":
+                            msg = '''您没有输入任何passkey！
+用法：login <password>'''
                         else:
-                            trys += 1
-                            msg = f"错误的密钥，您本次连接还有{5-trys}次尝试机会"
+                            if not inf_try:
+                                trys += 1
+                            msg = f"错误的密钥，您本次连接还有{max_try-trys}次尝试机会"
                     else:
                         msg = "本次连接的安全验证已禁用，请重新连接"
                 else:
-                    msg = "您已登录"
+                    msg = "您已使用passkey登录"
             else:
                 if logined:
                     if data[0] == "cmd":
@@ -93,7 +120,7 @@ def handle_client(conn, address):
 if __name__ == '__main__':
     print(f"WangTreeServer v{version}")
     print(f"address: {ip}")
-    print("正在启动服务端...", end='\r')
+    print("starting...", end='\r')
     server_host = ip
-    server_port = 200
+    server_port = config['server']['port']
     create_server_socket(server_host, server_port)
