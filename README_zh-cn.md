@@ -4,10 +4,10 @@
 
 基于Python的局域网设备控制系统
 
-|Language|
+|Languages|
 |-----|
-|English|
-|简体中文|
+|[English](https://github.com/WangTreeRemote/Client-CLI/README.md)|
+|简体中文[当前 Current]|
 
 ## 库
 
