@@ -4,6 +4,11 @@
 
 A Python-based LAN device control network system.
 
+|Languages|
+|-----|
+|English[当前 Current]|
+|[简体中文](https://github.com/WangTreeRemote/Client-CLI/blob/main/README_zh-cn.md)|
+
 ## Libraries Used
 
 | Library | Application |
