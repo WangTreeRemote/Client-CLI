@@ -1,46 +1,46 @@
 # 王果树 WangTree
+
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)  
-python实现局域网设备控制网络系统  
-使用库：  
-|库|用途|重要性|
-|---|---|---
-|socket|WT网络的必要通信方法|✅必须
-|sys|一些操作处理|✅必须
-|os|信息获取与cmd命令执行|✅必须
-|colorama|WT控制终端的输出信息显示|⭕可选
-|keyboard|WT受控终端的键盘操作|⭕可选
-|ctypes|WT受控终端的锁屏操作|⭕可选
-|threading|WT服务器的多线程信息处理|✅必须
 
-## 平台支持目标
-|~|windows|macOS|IOS|Android|Linux|
-|---|---|---|---|---|---
-|控制终端|✅完全支持|❌暂无计划|❌暂无计划|⭕进行中|✅完全支持
-|服务器|✅完全支持|❌暂无计划|❌暂无计划|❌暂无计划|☑部分兼容
-|受控终端|✅完全支持|❌暂无计划|❌暂无计划|❌暂无计划|☑部分兼容
+基于Python的局域网设备控制系统
 
-## WangTree网络结构
-一般情况下，WT网络为3类终端组成：  
-|~|工作方法|
-|---|---
-|控制终端|发送命令与检查命令执行情况
-|服务器|处理控制终端与受控终端之间的通信
-|受控终端|执行命令与发送命令执行情况
+## 库
 
-## 控制终端命令表（不再更新）
-```diff
-由于版本1.0.5之后的控制终端已经内置了命令`help`  
-因此该部分不再更新
+| 库名称 | 用途 |
+|---------|-------------|
+| socket | WT网络的核心通信方式 |
+| sys | 处理系统操作 |
+| os | 获取信息并执行命令行命令 |
+| colorama | 在客户端显示彩色输出信息 |
+| keyboard | 操作服务器键盘 |
+
+## 运行
+1.克隆仓库  
+```bash
+git clone https://github.com/WangTreeRemote/Client-CLI.git
+```
+2.切换到文件夹
+```bash
+cd WangTreeRemote/Client-CLI/
+```
+3.安装依赖
+```bash
+pip install -r requirements.txt
+```
+4.运行
+```bash
+python main.py
 ```
 
->注：这里只会列出版本1.0.5控制终端的命令列表  
-实际运行时请去掉`<>`，如果您要连接`127.0.0.1:200`，应使用命令`ser 127.0.0.1 200`  
-而不是`ser <127.0.0.1> <200>`
+## 打包
+安装`Pyinstaller`
+```bash
+pip install pyinstaller
+```
+打包
+```bash
+pyinstaller -F main.py
+```
 
-|命令|功能|方法
-|---|---|---
-|ser|连接WT服务器|`ser <ip> <port>`  
-|outlog|与已经连接的WT服务器断开连接：|`outlog` 
-|cmd|使WT受控终端运行cmd命令：|`cmd <command>`
-|key|使WT受控终端模拟键盘输入字符 方法：|`key <text>` 
-|lock|使WT受控终端锁定所在计算机 方法：|`lock`
+## 问题反馈
+[Issues](https://github.com/WangTreeRemote/Client-CLI/issues)
