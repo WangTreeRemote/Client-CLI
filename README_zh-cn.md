@@ -6,7 +6,7 @@
 
 |Languages|
 |-----|
-|[English](https://github.com/WangTreeRemote/Client-CLI/README.md)|
+|[English](https://github.com/WangTreeRemote/Client-CLI/blob/main/README.md)|
 |简体中文[当前 Current]|
 
 ## 库
