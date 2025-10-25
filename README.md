@@ -16,7 +16,7 @@ A Python-based LAN device control network system.
 
 ## How to Run
 
-1. Clone the repository  
+1.Clone the repository  
 ```bash
 git clone https://github.com/WangTreeRemote/Client-CLI.git
 ```
