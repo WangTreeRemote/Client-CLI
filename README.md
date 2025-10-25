@@ -40,7 +40,7 @@ pip install pyinstaller
 ```
 Package the code
 ```bash
-pyinstaller
+pyinstaller -F main.py
 ```
 
 ## Issues and Feedback
